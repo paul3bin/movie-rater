@@ -6,8 +6,8 @@ from rest_framework import viewsets
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = models.Movie.objects.all()
-    serializer_class = (serializers.MovieSerializer,)
+    serializer_class = serializers.MovieSerializer
 
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = models.Rating.objects.all()
-    serializer_class = (serializers.RatingSerializer,)
+    serializer_class = serializers.RatingSerializer
