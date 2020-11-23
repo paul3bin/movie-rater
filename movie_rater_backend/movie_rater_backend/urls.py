@@ -19,5 +19,5 @@ from django.conf.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'^api/', include('movie_rater_api.urls')),
+    path('api/', include('movie_rater_api.urls')),
 ]
