@@ -9,5 +9,5 @@ router.register('movies', views.MovieViewSet)
 router.register('ratings', views.RatingViewSet)
 
 urlpatterns = [
-    url(r'^$', include(router.urls)),
+    url('', include(router.urls)),
 ]
