@@ -1,14 +1,35 @@
 .App {
-  text-align: center;
+  min-height: 100vh;
+  color: white;
+  background-color: #282c34;
+  padding: 20px;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
+
+.Layout{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.Star-color{
+  color: orange;
+}
+
+.Rate-container{
+  border-top: 2px solid purple;
+  margin-top: 20px;
+}
+
+.New-rating{
+  color: lightcoral; 
+}
+
+.Rate-container .fa-star{
+  font-size: 1.5rem;
+  cursor: pointer;
+} 
