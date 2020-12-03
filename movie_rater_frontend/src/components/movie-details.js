@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 
 function MovieDetails(props){
-    const movie = props.movie;
+    let movie = props.movie;
     
     const [highlighted, setHighlighted] = useState(-1);
 
@@ -13,15 +13,25 @@ function MovieDetails(props){
 
     const rateClicked = rate => evnt =>{
         fetch(`http://127.0.0.1:8000/api/movies/${movie.id}/rate_movie/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Token 6beff210708869168fe13df836f3974b9bd533a7'
-      },
-      body: JSON.stringify({stars: rate+1})
-    }).then(resp => resp.json()).then(resp => console.log(resp)).catch(error => console.log())
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Token 6beff210708869168fe13df836f3974b9bd533a7'
+            },
+            body: JSON.stringify({stars: rate+1})
+        }).then(() => getDetails()).catch(error => console.log())
     }
     
+    const getDetails = () => {
+        fetch(`http://127.0.0.1:8000/api/movies/${movie.id}/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Token 6beff210708869168fe13df836f3974b9bd533a7'
+            }
+        }).then(resp => resp.json()).then(resp => props.updateMovie(resp)).catch(error => console.log())
+    }
+
     return (
         <React.Fragment>
             {
