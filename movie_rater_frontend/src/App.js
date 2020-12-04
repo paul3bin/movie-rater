@@ -1,54 +1,111 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
 import './App.css';
-import { MovieList } from './components/movie-list'
-import { MovieDetails } from './components/movie-details'
-import {MovieForm} from './components/movie-form'
+import { MovieList } from './components/movie-list';
+import { MovieDetails } from './components/movie-details';
+import {MovieForm} from './components/movie-form';
+import {useCookies} from 'react-cookie';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilm, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
   // creating a hook
   const [movies, setMovies] = useState([]);
 
+  const [token, setToken, deleteToken] = useCookies(['token']);
+
   // this component will remember which movie was selected.
   const [selectedMovie, setSelectedMovie] = useState(null);
 
   const [editedMovie, setEditedMovie] = useState(null);
+
+  // checking if the current user is authenticated or not. 
+  // if no it will redirect the user to the login page.
+  useEffect(() => {
+    if(!token['token']) window.location.href = '/'
+  }, [token])
   
   useEffect(()=>{
     fetch("http://127.0.0.1:8000/api/movies", {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Token 6beff210708869168fe13df836f3974b9bd533a7'
+        'Authorization': `Token ${token['token']}`
       }
     }).then(resp => resp.json()).then(resp => setMovies(resp)).catch(error => console.log())    
   }, [])
 
-  // arrow function that fetched the details of movie once the title of the movie have been clicked.
+  // arrow function that fetched the details of movie once the title of the movie is clicked.
   const movieClickAction = movie => {
     setSelectedMovie(movie);
+    setEditedMovie(null);
   }
 
-  // arrow function that loads the updated movie details once the ratings have been updated.
-  const loadMovie = movie => {
-    setSelectedMovie(movie);
-  }
-
-  // arrow function to edit the selected movie
-  const movieEdit = movie => {
+  // arrow function that takes actions on the event of edit button is clicked
+  const editMovieAction = movie => {
     setEditedMovie(movie);
+    setSelectedMovie(null);
+  }
+
+  const updatedMovieAction = movie => {
+    const newMovies = movies.map( mov => {
+      // looping through the list of movies and if same movie id is found then return it 
+      // else update the movie list
+      if (mov.id ===movie.id){
+        return movie;
+      }
+      return mov
+    })
+    setMovies(newMovies)
+  }
+
+  const newMovie = () =>{
+    setEditedMovie({title: '', genre: '', description: ''});
+    setSelectedMovie(null);
+  }
+
+  const createMovieAction = movie =>{
+    const newCreatedMovie = [...movies, movie]
+    setMovies(newCreatedMovie);
+  }
+
+  // arrow function that takes actions on the event of delete button is clicked
+  const deleteMovieAction = movie =>{
+    const updatedMovieList = movies.filter(mov => mov.id !== movie.id)
+    setMovies(updatedMovieList)
+  }
+
+  const logoutUser = () => {
+    deleteToken(['token']);
+    // window.location.href = '/'
   }
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Movie Rater</h1>
+        <h1>
+          <FontAwesomeIcon icon={faFilm} className="Icons"/>
+          <span>Movie Rater</span>
+        </h1>
+        <FontAwesomeIcon icon={faSignOutAlt} className="Icons" onClick={logoutUser}/>
       </header>
+      
       <div className="Layout">
-        {/* passing props */}
-          <MovieList movies={movies} movieClicked={movieClickAction} editMovie={movieEdit}/>
-          <MovieDetails movie={selectedMovie} updateMovie={loadMovie}/>
-          <MovieForm movie={editedMovie}/>
+        <div>
+          <MovieList 
+            movies={movies} 
+            movieClicked={movieClickAction} 
+            editMovie={editMovieAction} 
+            removeMovie={deleteMovieAction}/>
+          <button onClick={ newMovie } className='btn btn-success'>Add New Movie</button>
+        </div>  
+
+        <MovieDetails movie={selectedMovie} updateMovie={movieClickAction}/>
+        { editedMovie ? <MovieForm movie={editedMovie} 
+          updatedMovie={updatedMovieAction} 
+          createMovie={createMovieAction}/> 
+        : null}
       </div>
+
     </div>
   );
 }
