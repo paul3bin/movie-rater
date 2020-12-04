@@ -11,12 +11,13 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+    permission_classes = (AllowAny, )
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = models.Movie.objects.all()
     serializer_class = serializers.MovieSerializer
     authentication_classes = (TokenAuthentication, )
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
 
     @action(detail=True, methods=['POST'])
     def rate_movie(self, request, pk=None):
@@ -24,7 +25,6 @@ class MovieViewSet(viewsets.ModelViewSet):
             movie = models.Movie.objects.get(id=pk)
             stars = request.data['stars']
             user = request.user
-            # user = User.objects.get(id=1)
 
             try:
                 rating = models.Rating.objects.get(user=user.id, movie=movie.id)
