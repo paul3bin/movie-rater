@@ -6,6 +6,7 @@ import {MovieForm} from './components/movie-form';
 import {useCookies} from 'react-cookie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilm, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import {useFetchMovies} from './hooks/use-fetch'
 
 function App() {
   // creating a hook
@@ -18,6 +19,8 @@ function App() {
 
   const [editedMovie, setEditedMovie] = useState(null);
 
+  const [data, loading, error] = useFetchMovies();
+
   // checking if the current user is authenticated or not. 
   // if no it will redirect the user to the login page.
   useEffect(() => {
@@ -25,14 +28,8 @@ function App() {
   }, [token])
   
   useEffect(()=>{
-    fetch("http://127.0.0.1:8000/api/movies", {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${token['token']}`
-      }
-    }).then(resp => resp.json()).then(resp => setMovies(resp)).catch(error => console.log())    
-  }, [])
+    setMovies(data);    
+  }, [data])
 
   // arrow function that fetched the details of movie once the title of the movie is clicked.
   const movieClickAction = movie => {
@@ -79,6 +76,8 @@ function App() {
     // window.location.href = '/'
   }
 
+  if (loading) return <h1>Loading</h1>
+  if (error) return <h1>Error loading movies: {error}</h1>
   return (
     <div className="App">
       <header className="App-header">
