@@ -37,7 +37,7 @@ function Auth(){
             <header className="App-header">
                 {isLoginView ? <h1>Login</h1>: <h1>Register</h1>}
             </header>
-            <div className='Login-conatainer'>
+            <div className='Login-container'>
                 <input id='username' type='text' placeholder='Username' 
                 value={username} onChange={evnt => setUsername(evnt.target.value)}/><br/>
                 
