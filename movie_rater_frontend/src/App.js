@@ -2,11 +2,11 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import { MovieList } from './components/movie-list';
 import { MovieDetails } from './components/movie-details';
-import {MovieForm} from './components/movie-form';
-import {useCookies} from 'react-cookie';
+import { MovieForm } from './components/movie-form';
+import { useCookies } from 'react-cookie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilm, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import {useFetchMovies} from './hooks/use-fetch'
+import { useFetchMovies } from './hooks/use-fetch'
 
 function App() {
   // creating a hook
