@@ -14,7 +14,15 @@ function Auth(){
     // checking if the current user is authenticated or not. 
     // if yes it will redirect the user to the movies page.
     useEffect( () => {
-        if(token['token']) window.location.href = '/movies';
+        if (token['token']==='undefined'){
+            alert('Wrong username or password.')
+            setToken('token', '')
+            setUsername('')
+            setPassword('')
+        }
+        else{
+            if(token['token']) window.location.href = '/movies';
+        }
     }, [token])
 
     const loginClicked = () => {
